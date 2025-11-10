@@ -1,7 +1,11 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useApp } from '../../context/AppContext';
+import { ALL_STREAMING_SERVICES } from '../../data/movies';
 
 export default function ProfileScreen() {
+  const { watchlist, seenMovies, customLists, userServices } = useApp();
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -16,10 +20,21 @@ export default function ProfileScreen() {
           <View style={styles.listHeader}>
             <Text style={styles.listTitle}>🔖 Watchlist</Text>
             <View style={styles.badge}>
-              <Text style={styles.badgeText}>0</Text>
+              <Text style={styles.badgeText}>{watchlist.length}</Text>
             </View>
           </View>
           <Text style={styles.listSubtitle}>Movies you want to watch</Text>
+          {watchlist.length > 0 && (
+            <View style={styles.moviePreviews}>
+              {watchlist.slice(0, 3).map(movie => (
+                <Image
+                  key={movie.id}
+                  source={{ uri: movie.poster }}
+                  style={styles.previewPoster}
+                />
+              ))}
+            </View>
+          )}
         </View>
 
         {/* Seen Movies Card */}
@@ -27,10 +42,21 @@ export default function ProfileScreen() {
           <View style={styles.listHeader}>
             <Text style={styles.listTitle}>✓ Movies I've Seen</Text>
             <View style={styles.badge}>
-              <Text style={styles.badgeText}>0</Text>
+              <Text style={styles.badgeText}>{seenMovies.length}</Text>
             </View>
           </View>
           <Text style={styles.listSubtitle}>Ready to rank when you want</Text>
+          {seenMovies.length > 0 && (
+            <View style={styles.moviePreviews}>
+              {seenMovies.slice(0, 3).map(movie => (
+                <Image
+                  key={movie.id}
+                  source={{ uri: movie.poster }}
+                  style={styles.previewPoster}
+                />
+              ))}
+            </View>
+          )}
         </View>
 
         {/* Master Ranked List Card */}
@@ -38,7 +64,7 @@ export default function ProfileScreen() {
           <View style={styles.listHeader}>
             <Text style={styles.listTitle}>🏆 Master Ranked List</Text>
             <View style={styles.badge}>
-              <Text style={styles.badgeText}>0</Text>
+              <Text style={styles.badgeText}>{seenMovies.length}</Text>
             </View>
           </View>
           <Text style={styles.listSubtitle}>Your top-rated movies</Text>
@@ -52,31 +78,25 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.customListName}>Holiday Favorites</Text>
-          <Text style={styles.customListCount}>0 movies</Text>
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.customListName}>Comedies</Text>
-          <Text style={styles.customListCount}>0 movies</Text>
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.customListName}>Date Night</Text>
-          <Text style={styles.customListCount}>0 movies</Text>
-        </View>
+        {customLists.map(list => (
+          <View key={list.id} style={styles.card}>
+            <Text style={styles.customListName}>{list.name}</Text>
+            <Text style={styles.customListCount}>{list.movies.length} movies</Text>
+          </View>
+        ))}
 
         {/* Streaming Services */}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>My Streaming Services</Text>
           <Text style={styles.cardText}>
-            Configure your subscriptions in settings
+            Currently subscribed to {userServices.length} services
           </Text>
           <View style={styles.servicesList}>
-            <Text style={styles.serviceItem}>Netflix</Text>
-            <Text style={styles.serviceItem}>HBO Max</Text>
-            <Text style={styles.serviceItem}>+ 8 more</Text>
+            {userServices.map(service => (
+              <View key={service} style={styles.serviceTag}>
+                <Text style={styles.serviceText}>{service}</Text>
+              </View>
+            ))}
           </View>
         </View>
 
@@ -146,6 +166,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#FFFFFF',
     opacity: 0.9,
+    marginBottom: 12,
   },
   badge: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
@@ -157,6 +178,15 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  moviePreviews: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  previewPoster: {
+    width: 60,
+    height: 90,
+    borderRadius: 8,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -221,12 +251,14 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 8,
   },
-  serviceItem: {
+  serviceTag: {
     backgroundColor: '#8B5CF6',
-    color: '#FFFFFF',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
+  },
+  serviceText: {
+    color: '#FFFFFF',
     fontSize: 12,
     fontWeight: '600',
   },
