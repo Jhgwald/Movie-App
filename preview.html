@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Match - iPhone Preview</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    h1 {
+      color: white;
+      margin-bottom: 30px;
+      text-align: center;
+      font-size: 2em;
+    }
+
+    .device-selector {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .device-btn {
+      background: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .device-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .device-btn.active {
+      background: #8B5CF6;
+      color: white;
+    }
+
+    .iphone-frame {
+      background: #1a1a1a;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      transition: all 0.3s ease;
+    }
+
+    .iphone-screen {
+      border-radius: 40px;
+      overflow: hidden;
+      background: white;
+      position: relative;
+    }
+
+    /* iPhone 12 Pro */
+    .iphone-12 .iphone-screen {
+      width: 390px;
+      height: 844px;
+    }
+
+    /* iPhone SE */
+    .iphone-se .iphone-screen {
+      width: 375px;
+      height: 667px;
+    }
+
+    /* iPhone 14 Pro Max */
+    .iphone-14-max .iphone-screen {
+      width: 430px;
+      height: 932px;
+    }
+
+    /* Notch */
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 30px;
+      background: #1a1a1a;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .info {
+      color: white;
+      margin-top: 20px;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 500px) {
+      .iphone-frame {
+        transform: scale(0.8);
+      }
+
+      h1 {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>📱 Movie Match - iPhone Preview</h1>
+
+  <div class="device-selector">
+    <button class="device-btn active" onclick="changeDevice('iphone-12')">iPhone 12 Pro</button>
+    <button class="device-btn" onclick="changeDevice('iphone-se')">iPhone SE</button>
+    <button class="device-btn" onclick="changeDevice('iphone-14-max')">iPhone 14 Pro Max</button>
+  </div>
+
+  <div id="deviceFrame" class="iphone-frame iphone-12">
+    <div class="iphone-screen">
+      <div class="notch"></div>
+      <iframe src="index.html"></iframe>
+    </div>
+  </div>
+
+  <div class="info">
+    <p>🎬 Try navigating between tabs and browsing movies!</p>
+    <p>Click buttons above to switch iPhone models</p>
+  </div>
+
+  <script>
+    function changeDevice(deviceClass) {
+      const frame = document.getElementById('deviceFrame');
+      frame.className = 'iphone-frame ' + deviceClass;
+
+      // Update active button
+      document.querySelectorAll('.device-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>
